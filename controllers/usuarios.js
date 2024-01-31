@@ -1,9 +1,7 @@
 const { response, request } = require("express");
-const bcryptjs = require("bcryptjs")
-
+const bcryptjs = require("bcryptjs");
 
 const Usuario = require("../models/usuario");
-
 
 const usuariosGet = async(req = request, res = response) => {
 
@@ -30,7 +28,7 @@ const usuariosPost = async  (req, res  = response) => {
     const usuario = new Usuario({nombre, correo, password, rol});
 
     // Encriptar la contraseña
-    const salt = bcryptjs.genSaltSync(11);
+    const salt = bcryptjs.genSaltSync();
     usuario.password = bcryptjs.hashSync(password, salt);
 
     //Guardar en DB
@@ -39,7 +37,7 @@ const usuariosPost = async  (req, res  = response) => {
     res.json({
         usuario
     });
-  };
+}
 
 const usuariosPut = async (req, res  = response) => {
 
@@ -55,9 +53,15 @@ const usuariosPut = async (req, res  = response) => {
     const usuario = await Usuario.findByIdAndUpdate(id, resto);
 
     res.json(usuario);
-  };
+}
 
-  const usuariosDelete =  async(req, res  = response) => {
+const usuariosPatch =  (req, res  = response) => {
+    res.json({
+        msg: "patch API - controlador"
+    });
+}
+
+const usuariosDelete =  async(req, res  = response) => {
 
     const {id} =req.params;
 
@@ -65,18 +69,8 @@ const usuariosPut = async (req, res  = response) => {
     // const usuario = await Usuario.findByIdAndDelete(id);
 
     const usuario = await Usuario.findOneAndUpdate(id, {estado: false});
-
-
     res.json(usuario);
-  };
-
-const usuariosPatch =  (req, res  = response) => {
-    res.json({
-        msg: "patch API - controlador"
-    });
-  };
-
-
+}
 
 module.exports = {
     usuariosGet,
