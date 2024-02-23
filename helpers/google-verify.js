@@ -1,25 +1,33 @@
-const {OAuth2Client} = require('google-auth-library');
+const { OAuth2Client } = require('google-auth-library');
 
+// Crear instancia del cliente de OAuth2
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
+// Función para verificar un token de Google
 const googleVerify = async (token = "") => {
 
-  const ticket = await client.verifyIdToken({
-      idToken: token,
-      audience: process.env.GOOGLE_CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
-      // Or, if multiple clients access the backend:
-      //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
-  });
-  const {name, picture, email} = ticket.getPayload();
+    try {
+        // Verificar la autenticidad del token
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
 
-  return{
-    nombre: name,  
-    img: picture,
-    correo: email
+        // Obtener información del usuario desde el token verificado
+        const { name, picture, email } = ticket.getPayload();
 
-  }
-
+        // Devolver la información necesaria del usuario
+        return {
+            nombre: name,
+            img: picture,
+            correo: email
+        };
+    } catch (error) {
+        // En caso de error, lanzar una excepción
+        throw new Error("Error al verificar el token de Google");
+    }
 }
+
 module.exports = {
     googleVerify
 }

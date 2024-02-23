@@ -2,39 +2,41 @@ const Role = require("../models/role");
 const { Usuario, Categoria, Producto } = require("../models");
 
 /**
- * Usuaiors
+ * Usuarios
  */
 
-// Verificar si es un rol valido
-const esRoleValido = async( rol = "") => {
-    const existeRol = await Role.findOne({rol});
-    if(!existeRol){
-        throw new Error(`El rol ${rol} no esta registrado en la BD`);   
+// Verificar si es un rol válido
+const esRoleValido = async (rol = "") => {
+    const existeRol = await Role.findOne({ rol });
+    if (!existeRol) {
+        throw new Error(`El rol ${rol} no está registrado en la BD`);
     }
     return true;
 }
+
 // Verificar si el correo existe
-const emailExiste = async(correo = "") => {
-    const existeEmail = await Usuario.findOne({correo});
-    if (existeEmail){
+const emailExiste = async (correo = "") => {
+    const existeEmail = await Usuario.findOne({ correo });
+    if (existeEmail) {
         throw new Error(`El correo: ${correo} ya se encuentra registrado, por favor ingresa otro`);
     }
     return true;
 }
+
 // Verificar si el usuario existe
-const existeUsuarioPorId = async(id) => {
+const existeUsuarioPorId = async (id) => {
     const existeUsuario = await Usuario.findById(id);
-    if (!existeUsuario){
+    if (!existeUsuario) {
         throw new Error(`El id: ${id} no existe`);
     }
     return true;
 }
 
 /**
- * Categorias
+ * Categorías
  */
 
-// Verificar si la categoria existe
+// Verificar si la categoría existe
 const existeCategoriaPorId = async (id) => {
     const existeCategoria = await Categoria.findById(id);
     if (!existeCategoria) {
@@ -60,11 +62,11 @@ const existeProductoPorId = async (id) => {
  * Colecciones 
  */
 
-// Validad colecciones permitidas
-const coleccionesPermitidas = (coleccion = "", colecciones = []) =>{
+// Validar colecciones permitidas
+const coleccionesPermitidas = (coleccion = "", colecciones = []) => {
     const incluida = colecciones.includes(coleccion);
     if (!incluida) {
-        throw new Error(`La coleccion ${coleccion} no es permitida, estas son las permitidas: ${colecciones}`)
+        throw new Error(`La colección ${coleccion} no es permitida, estas son las permitidas: ${colecciones}`);
     }
     return true;
 }

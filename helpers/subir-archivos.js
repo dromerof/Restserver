@@ -1,28 +1,31 @@
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 
-const subirArchivo = ( files, extensionesValidas = ['png','jpg','jpeg','gif'], carpeta = '' ) => {
+// Función para subir archivos al servidor
+const subirArchivo = (files, extensionesValidas = ['png', 'jpg', 'jpeg', 'gif'], carpeta = '') => {
 
-    return new Promise( (resolve, reject) => {
+    return new Promise((resolve, reject) => {
 
         const { archivo } = files;
         const nombreCortado = archivo.name.split('.');
-        const extension = nombreCortado[ nombreCortado.length - 1 ];
+        const extension = nombreCortado[nombreCortado.length - 1];
 
-        // Validar la extension
-        if ( !extensionesValidas.includes( extension ) ) {
-            return reject(`La extensión ${ extension } no es permitida - ${ extensionesValidas }`);
+        // Validar la extensión
+        if (!extensionesValidas.includes(extension)) {
+            return reject(`La extensión ${extension} no es permitida - ${extensionesValidas}`);
         }
-        
-        const nombreTemp = uuidv4() + '.' + extension;
-        const uploadPath = path.join( __dirname, '../uploads/', carpeta, nombreTemp );
 
+        // Generar un nombre único para el archivo
+        const nombreTemp = uuidv4() + '.' + extension;
+        const uploadPath = path.join(__dirname, '../uploads/', carpeta, nombreTemp);
+
+        // Mover el archivo al directorio de uploads
         archivo.mv(uploadPath, (err) => {
             if (err) {
                 reject(err);
             }
 
-            resolve( nombreTemp );
+            resolve(nombreTemp);
         });
 
     });

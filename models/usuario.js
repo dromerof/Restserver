@@ -1,42 +1,52 @@
-const {Schema, model} = require("mongoose");
+const { Schema, model } = require("mongoose");
 
-const  UsuarioSchema = Schema({
-    nombre:{
+// Definición del esquema para el usuario
+const UsuarioSchema = Schema({
+    // Nombre del usuario
+    nombre: {
         type: String,
-        required: [true, "El nombre es obligatorio"]
+        required: [true, "El nombre es obligatorio"],
     },
-    correo:{
+    // Correo del usuario
+    correo: {
         type: String,
         required: [true, "El correo es obligatorio"],
-        unique: true
+        unique: true,
     },
-    password:{
+    // Contraseña del usuario
+    password: {
         type: String,
-        required: [true, "La contraseña es obligatoria"]
+        required: [true, "La contraseña es obligatoria"],
     },
-    img:{
+    // Imagen del usuario
+    img: {
         type: String,
     },
-    rol:{
+    // Rol del usuario (ADMIN_ROLE, USER_ROLE, etc.)
+    rol: {
         type: String,
         required: true,
         default: "USER_ROLE",
-        emun:["ADMIN_ROLE", "USER_ROLE"]
+        enum: ["ADMIN_ROLE", "USER_ROLE"], // Valores permitidos
     },
-    estado:{
+    // Estado del usuario (activo o inactivo)
+    estado: {
         type: Boolean,
-        default: true
+        default: true,
     },
-    google:{
+    // Indica si el usuario se registró con Google
+    google: {
         type: Boolean,
-        default: false
+        default: false,
     },
 });
 
-UsuarioSchema.methods.toJSON = function(){
-        const {__v, password, _id, ...usuario} = this.toObject();
-        usuario.uid = _id;
-        return usuario;
-}
+// Método para transformar el objeto de usuario a formato JSON
+UsuarioSchema.methods.toJSON = function () {
+    // Extraer propiedades innecesarias antes de enviar el objeto JSON
+    const { __v, password, _id, ...usuario } = this.toObject();
+    usuario.uid = _id;
+    return usuario;
+};
 
 module.exports = model("Usuario", UsuarioSchema);

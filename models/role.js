@@ -1,6 +1,8 @@
-const {Schema, model} = require ("mongoose");
+const { Schema, model } = require("mongoose");
 
-const RoleSchema = Schema ({
+// Modelo de Role
+const RoleSchema = Schema({
+    // Nombre del rol
     rol: {
         type: String,
         required: [true, "El rol es obligatorio"]

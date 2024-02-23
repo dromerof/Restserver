@@ -3,12 +3,13 @@ const cors = require("cors");
 const fileUpload = require("express-fileupload");
 
 const { dbConnection } = require('../database/config');
-class Server {
 
-    constructor(){
+class Server {
+    constructor() {
         this.app = express();
         this.port = process.env.PORT;
-
+        
+        // Definir las rutas de la aplicación
         this.path = {
             auth: "/api/auth",
             buscar: "/api/buscar",
@@ -16,40 +17,44 @@ class Server {
             productos: "/api/productos",
             usuarios: "/api/usuarios",
             uploads: "/api/uploads",
-        }
-        
-        // Conectar a base de datos
-        this.conectarDD();
+        };
 
-        //Middlewares
+        // Conectar a la base de datos
+        this.conectarDB();
+
+        // Middlewares
         this.middlewares();
-        
-        // Rutas de mi aplicacion
+
+        // Rutas de la aplicación
         this.routes();
     }
 
-    async conectarDD(){
+    async conectarDB() {
         await dbConnection();
     }
-    
-    middlewares(){
+
+    // Configurar los middlewares de la aplicación
+    middlewares() {
         // CORS
         this.app.use(cors());
 
         // Lectura y parseo del body
         this.app.use(express.json());
 
-        // Directorio  publico
-        this.app.use( express.static("public") );
+        // Directorio público
+        this.app.use(express.static("public"));
 
         // Fileupload - Carga de archivos
-        this.app.use(fileUpload({
-            useTempFiles : true,
-            tempFileDir : '/tmp/',
-            createParentPath: true
-        }));
+        this.app.use(
+            fileUpload({
+                useTempFiles: true,
+                tempFileDir: '/tmp/',
+                createParentPath: true,
+            })
+        );
     }
 
+    // Configurar las rutas de la aplicación
     routes() {
         this.app.use(this.path.auth, require("../routes/auth"));
         this.app.use(this.path.buscar, require("../routes/buscar"));
@@ -59,7 +64,8 @@ class Server {
         this.app.use(this.path.uploads, require("../routes/uploads"));
     }
 
-    listen(){
+    // Iniciar el servidor y escuchar en el puerto especificado
+    listen() {
         this.app.listen(this.port, () => {
             console.log("Servidor corriendo en puerto", this.port);
         });
